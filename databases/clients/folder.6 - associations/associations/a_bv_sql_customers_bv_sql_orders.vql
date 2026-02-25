@@ -1,0 +1,6 @@
+﻿CREATE OR REPLACE ASSOCIATION a_bv_sql_customers_bv_sql_orders REFERENTIAL CONSTRAINT 
+FOLDER = '/6 - associations'
+    ENDPOINT bv_sql_orders bv_sql_customers PRINCIPAL (0,1)
+    ENDPOINT bv_sql_customers bv_sql_orders (0,*)
+    ADD MAPPING customerid=customerid;
+
