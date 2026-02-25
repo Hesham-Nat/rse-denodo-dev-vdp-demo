@@ -1,0 +1,70 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE WRAPPER JDBC queries
+    FOLDER = '/mpp queries'
+    DATASOURCENAME=embedded_mpp
+    CATALOGNAME='${databases.admin_denodo_mpp.folder.mpp queries.views.jdbc.queries.CATALOGNAME}' ESCAPE
+    SCHEMANAME='${databases.admin_denodo_mpp.folder.mpp queries.views.jdbc.queries.SCHEMANAME}' 
+    RELATIONNAME='queries' 
+    OUTPUTSCHEMA (
+        query_id = 'query_id' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        state = 'state' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        user_0 = 'user' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  ESCAPE NOT NULL SORTABLE,
+        source = 'source' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        query = 'query' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        resource_group_id = 'resource_group_id': ARRAY OF (
+            resource_group_id = 'RESOURCE_GROUP_ID' : REGISTER OF (
+                item = 'item' :'java.lang.String' (sourcetypeid='12', sourcetypename='varchar')  NOT SORTABLE
+            ) NOT SORTABLE NOT UPDATEABLE
+        ) (sourcetypeid='2003', sourcetypename='array(varchar)')  NOT NULL NOT SORTABLE NOT UPDATEABLE ISTABLE,
+        queued_time_ms = 'queued_time_ms' :'java.lang.Long' (OPT) (sourcetyperadix='10', sourcetypesize='19', sourcetypeid='-5', sourcetypename='bigint')  NOT NULL SORTABLE,
+        analysis_time_ms = 'analysis_time_ms' :'java.lang.Long' (OPT) (sourcetyperadix='10', sourcetypesize='19', sourcetypeid='-5', sourcetypename='bigint')  NOT NULL SORTABLE,
+        created = 'created' :'java.time.OffsetDateTime' (OPT) (sourcetypesize='23', sourcetypeid='93', sourcetypename='timestamp')  NOT NULL SORTABLE,
+        started = 'started' :'java.time.OffsetDateTime' (OPT) (sourcetypesize='23', sourcetypeid='93', sourcetypename='timestamp')  NOT NULL SORTABLE,
+        last_heartbeat = 'last_heartbeat' :'java.time.OffsetDateTime' (OPT) (sourcetypesize='23', sourcetypeid='93', sourcetypename='timestamp')  NOT NULL SORTABLE,
+        end = 'end' :'java.time.OffsetDateTime' (OPT) (sourcetypesize='23', sourcetypeid='93', sourcetypename='timestamp')  ESCAPE NOT NULL SORTABLE
+    );
+
+CREATE OR REPLACE TYPE queries_resource_group_id_resource_group_id AS REGISTER OF (item:text (sourcetypeid = '12'));
+
+CREATE OR REPLACE TYPE queries_resource_group_id AS ARRAY OF queries_resource_group_id_resource_group_id;
+
+CREATE OR REPLACE TABLE denodo_mpp_queries I18N es_euro (
+        query_id:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        state:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        user_0:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        source:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        query:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        resource_group_id:queries_resource_group_id,
+        queued_time_ms:long (notnull, sourcetypeid = '-5', sourcetyperadix = '10', sourcetypesize = '19'),
+        analysis_time_ms:long (notnull, sourcetypeid = '-5', sourcetyperadix = '10', sourcetypesize = '19'),
+        created:timestamptz (notnull, sourcetypeid = '2014', sourcetypesize = '23'),
+        started:timestamptz (notnull, sourcetypeid = '2014', sourcetypesize = '23'),
+        last_heartbeat:timestamptz (notnull, sourcetypeid = '2014', sourcetypesize = '23'),
+        end:timestamptz (notnull, sourcetypeid = '2014', sourcetypesize = '23')
+    )
+    FOLDER = '/mpp queries'
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD queries(
+        I18N es_euro
+        CONSTRAINTS (
+             ADD query_id (any) OPT ANY
+             ADD state (any) OPT ANY
+             ADD user_0 (any) OPT ANY
+             ADD source (any) OPT ANY
+             ADD query (any) OPT ANY
+             ADD queued_time_ms (any) OPT ANY
+             ADD analysis_time_ms (any) OPT ANY
+             ADD created (any) OPT ANY
+             ADD started (any) OPT ANY
+             ADD last_heartbeat (any) OPT ANY
+             ADD end (any) OPT ANY
+             ADD resource_group_id NOS ZERO ()
+             ADD resource_group_id NOS ZERO ()
+             ADD resource_group_id.item NOS ZERO ()
+        )
+        OUTPUTLIST (analysis_time_ms, created, end, last_heartbeat, query, query_id, queued_time_ms, resource_group_id, source, started, state, user_0
+        )
+        WRAPPER (jdbc queries)
+    );
+

@@ -1,0 +1,45 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE DATASOURCE JDBC embedded_mpp EMBEDDED_MPP
+    DRIVERCLASSNAME = 'com.facebook.presto.jdbc.PrestoDriver'
+    DATABASEURI = '${databases.admin_denodo_mpp.datasources.jdbc.embedded_mpp.DATABASEURI}'
+    USERNAME = '${databases.admin_denodo_mpp.datasources.jdbc.embedded_mpp.USERNAME}'
+    CLASSPATH = 'presto-0.1x'
+    DATABASENAME = 'presto'
+    DATABASEVERSION = '0_1x'
+    FETCHSIZE = 1000
+    VALIDATIONQUERY = 'Select 1'
+    INITIALSIZE = 4
+    MAXIDLE = -1
+    MINIDLE = 0
+    MAXACTIVE = 30
+    EXHAUSTEDACTION = 1
+    TESTONBORROW = true
+    TESTONRETURN = false
+    TESTWHILEIDLE = false
+    TIMEBETWEENEVICTION = -1
+    NUMTESTPEREVICTION = 3
+    MINEVICTABLETIME = 1800000
+    POOLPREPAREDSTATEMENTS = false
+    MAXOPENPREPAREDSTATEMENTS = 8
+    DATA_LOAD_CONFIGURATION (
+        USE_FOR_QUERY_OPTIMIZATION = PARALLEL_PROCESSING
+        BATCHINSERTSIZE = 5000000
+        BULK_LOAD_CONFIGURATION (
+            HDFS_URI = '${databases.admin_denodo_mpp.datasources.jdbc.embedded_mpp.HDFS_URI}'
+            SERVER_TIMEZONE = 'America/Boise'
+            TABLE_FORMAT = PARQUET
+        )
+        USEEXTERNALTABLES ( 
+            ONMOVEREAD = false,
+            ONMOVEWRITE = true
+        )
+    )
+    EXTERNAL_DATA_CONFIGURATION (
+        FILE_SYSTEM HDFS
+        EXTERNAL_DATA_ROUTES (
+            "route" = '${databases.admin_denodo_mpp.datasources.jdbc.embedded_mpp.external_data.routes.route}'
+        )
+    )
+    PROCESSING_UNITS = 1
+    CPUS_PER_PROCESSING_UNIT = 8;
+

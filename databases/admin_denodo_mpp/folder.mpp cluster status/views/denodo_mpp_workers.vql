@@ -1,0 +1,39 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE WRAPPER JDBC nodes
+    FOLDER = '/mpp cluster status'
+    DATASOURCENAME=embedded_mpp
+    CATALOGNAME='${databases.admin_denodo_mpp.folder.mpp cluster status.views.jdbc.nodes.CATALOGNAME}' ESCAPE
+    SCHEMANAME='${databases.admin_denodo_mpp.folder.mpp cluster status.views.jdbc.nodes.SCHEMANAME}' 
+    RELATIONNAME='nodes' 
+    OUTPUTSCHEMA (
+        node_id = 'node_id' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        http_uri = 'http_uri' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        node_version = 'node_version' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        coordinator = 'coordinator' :'java.lang.Boolean' (OPT) (sourcetypeid='16', sourcetypename='boolean')  NOT NULL NOT SORTABLE,
+        state = 'state' :'java.lang.String' (OPT) (sourcetypesize='2147483647', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE
+    );
+
+CREATE OR REPLACE TABLE denodo_mpp_workers I18N es_euro (
+        node_id:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        http_uri:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        node_version:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647'),
+        coordinator:boolean (notnull, sourcetypeid = '16'),
+        state:text (notnull, sourcetypeid = '12', sourcetypesize = '2147483647')
+    )
+    FOLDER = '/mpp cluster status'
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD nodes(
+        I18N es_euro
+        CONSTRAINTS (
+             ADD node_id (any) OPT ANY
+             ADD http_uri (any) OPT ANY
+             ADD node_version (any) OPT ANY
+             ADD coordinator (any) OPT ANY
+             ADD state (any) OPT ANY
+        )
+        OUTPUTLIST (coordinator, http_uri, node_id, node_version, state
+        )
+        WRAPPER (jdbc nodes)
+    );
+

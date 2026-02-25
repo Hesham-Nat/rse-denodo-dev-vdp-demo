@@ -1,0 +1,110 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE WRAPPER JSON denodo_mpp_worker_status
+    FOLDER = '/mpp cluster status'
+    DATASOURCENAME=denodo_mpp_api
+    TUPLEROOT '/JSONFile'
+    ROUTE HTTP 'http.ApacheHttpClientConnection,120000' GET '${databases.admin_denodo_mpp.folder.mpp cluster status.views.json.denodo_mpp_worker_status.ROUTE.HTTP.URL}'
+    OUTPUTSCHEMA (jsonfile = 'JSONFile' : REGISTER OF (
+        workerid = 'WORKERID' : 'java.lang.String' (OBL) (DEFAULTVALUE='e2f202f2-0749-11e8-ac61-1418774e32a1') EXTERN,
+        nodeid = 'nodeId' : 'java.lang.String',
+        nodeversion = 'nodeVersion' : REGISTER OF (
+            version = 'version' : 'java.lang.String'
+        ),
+        environment = 'environment' : 'java.lang.String',
+        coordinator = 'coordinator' : 'java.lang.String',
+        uptime = 'uptime' : 'java.lang.String',
+        externaladdress = 'externalAddress' : 'java.lang.String',
+        internaladdress = 'internalAddress' : 'java.lang.String',
+        memoryinfo = 'memoryInfo' : REGISTER OF (
+            totalnodememory = 'totalNodeMemory' : 'java.lang.String',
+            pools = 'pools' : REGISTER OF (
+                reserved = 'reserved' : REGISTER OF (
+                    maxbytes = 'maxBytes' : 'java.lang.Integer',
+                    reservedbytes = 'reservedBytes' : 'java.lang.Integer',
+                    reservedrevocablebytes = 'reservedRevocableBytes' : 'java.lang.Integer',
+                    freebytes = 'freeBytes' : 'java.lang.Integer'
+                ),
+                general = 'general' : REGISTER OF (
+                    maxbytes = 'maxBytes' : 'java.lang.Integer',
+                    reservedbytes = 'reservedBytes' : 'java.lang.Integer',
+                    reservedrevocablebytes = 'reservedRevocableBytes' : 'java.lang.Integer',
+                    freebytes = 'freeBytes' : 'java.lang.Integer'
+                )
+            )
+        ),
+        processors = 'processors' : 'java.lang.Integer',
+        processcpuload = 'processCpuLoad' : 'java.lang.Double',
+        systemcpuload = 'systemCpuLoad' : 'java.lang.Double',
+        heapused = 'heapUsed' : 'java.lang.Integer',
+        heapavailable = 'heapAvailable' : 'java.lang.Long',
+        nonheapused = 'nonHeapUsed' : 'java.lang.Integer'
+    )
+    );
+
+CREATE OR REPLACE TYPE denodo_mpp_api_nodeversion AS REGISTER OF (version:text);
+
+CREATE OR REPLACE TYPE denodo_mpp_api_memoryinfo_pools_reserved AS REGISTER OF (maxbytes:int, reservedbytes:int, reservedrevocablebytes:int, freebytes:int);
+
+CREATE OR REPLACE TYPE denodo_mpp_api_memoryinfo_pools_general AS REGISTER OF (maxbytes:int, reservedbytes:int, reservedrevocablebytes:int, freebytes:int);
+
+CREATE OR REPLACE TYPE denodo_mpp_api_memoryinfo_pools AS REGISTER OF (reserved:denodo_mpp_api_memoryinfo_pools_reserved, general:denodo_mpp_api_memoryinfo_pools_general);
+
+CREATE OR REPLACE TYPE denodo_mpp_api_memoryinfo AS REGISTER OF (totalnodememory:text, pools:denodo_mpp_api_memoryinfo_pools);
+
+CREATE OR REPLACE TABLE denodo_mpp_worker_status I18N es_euro (
+        workerid:text (extern),
+        nodeid:text,
+        nodeversion:denodo_mpp_api_nodeversion,
+        environment:text,
+        coordinator:text,
+        uptime:text,
+        externaladdress:text,
+        internaladdress:text,
+        memoryinfo:denodo_mpp_api_memoryinfo,
+        processors:int,
+        processcpuload:double,
+        systemcpuload:double,
+        heapused:int,
+        heapavailable:long,
+        nonheapused:int
+    )
+    FOLDER = '/mpp cluster status'
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD denodo_mpp_worker_status(
+        I18N es_euro
+        CONSTRAINTS (
+             ADD workerid (=) OBL ONE
+             ADD nodeid NOS ZERO ()
+             ADD nodeversion NOS ZERO ()
+             ADD nodeversion.version NOS ZERO ()
+             ADD environment NOS ZERO ()
+             ADD coordinator NOS ZERO ()
+             ADD uptime NOS ZERO ()
+             ADD externaladdress NOS ZERO ()
+             ADD internaladdress NOS ZERO ()
+             ADD memoryinfo NOS ZERO ()
+             ADD memoryinfo.totalnodememory NOS ZERO ()
+             ADD memoryinfo.pools NOS ZERO ()
+             ADD memoryinfo.pools.reserved NOS ZERO ()
+             ADD memoryinfo.pools.reserved.maxbytes NOS ZERO ()
+             ADD memoryinfo.pools.reserved.reservedbytes NOS ZERO ()
+             ADD memoryinfo.pools.reserved.reservedrevocablebytes NOS ZERO ()
+             ADD memoryinfo.pools.reserved.freebytes NOS ZERO ()
+             ADD memoryinfo.pools.general NOS ZERO ()
+             ADD memoryinfo.pools.general.maxbytes NOS ZERO ()
+             ADD memoryinfo.pools.general.reservedbytes NOS ZERO ()
+             ADD memoryinfo.pools.general.reservedrevocablebytes NOS ZERO ()
+             ADD memoryinfo.pools.general.freebytes NOS ZERO ()
+             ADD processors NOS ZERO ()
+             ADD processcpuload NOS ZERO ()
+             ADD systemcpuload NOS ZERO ()
+             ADD heapused NOS ZERO ()
+             ADD heapavailable NOS ZERO ()
+             ADD nonheapused NOS ZERO ()
+        )
+        OUTPUTLIST (coordinator, environment, externaladdress, heapavailable, heapused, internaladdress, memoryinfo, nodeid, nodeversion, nonheapused, processcpuload, processors, systemcpuload, uptime
+        )
+        WRAPPER (json denodo_mpp_worker_status)
+    );
+

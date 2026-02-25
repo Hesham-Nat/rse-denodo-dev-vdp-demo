@@ -1,0 +1,5 @@
+﻿CREATE OR REPLACE DATABASE admin_denodo_mpp '';
+
+ALTER DATABASE admin_denodo_mpp
+  CHARSET DEFAULT;
+

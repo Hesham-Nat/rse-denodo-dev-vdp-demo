@@ -1,0 +1,8 @@
+﻿1/databases/admin_denodo_mpp/folder.mpp cluster status/mpp cluster status.vql
+*/databases/admin_denodo_mpp/folder.mpp cluster status/mpp cluster status.vql
+*/databases/admin_denodo_mpp/datasources/jdbc/embedded_mpp.vql
+1/databases/admin_denodo_mpp/folder.mpp cluster status/views/denodo_mpp_workers.vql
+*/databases/admin_denodo_mpp/datasources/json/denodo_mpp_api.vql
+1/databases/admin_denodo_mpp/folder.mpp cluster status/views/denodo_mpp_worker_status.vql
+*/databases/admin_denodo_mpp/folder.mpp cluster status/views/denodo_mpp_workers.vql
+*/databases/admin_denodo_mpp/folder.mpp cluster status/views/denodo_mpp_worker_status.vql
