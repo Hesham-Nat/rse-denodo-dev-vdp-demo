@@ -21,7 +21,7 @@ CREATE OR REPLACE TABLE bv_sql_customers I18N us_pst (
         email:text (sourcetypeid = '-9', sourcetypesize = '100')
     )
     FOLDER = '/2 - base views'
-    CONSTRAINT 'PK__Customer__A4AE64B8DA5333CE' PRIMARY KEY ( 'customerid' )
+    PRIMARY KEY ( 'customerid' )
     CACHE OFF
     TIMETOLIVEINCACHE DEFAULT
     ADD SEARCHMETHOD bv_sql_customers(
