@@ -1,0 +1,8 @@
+﻿CREATE OR REPLACE VIEW dv_bv_sql_customers_j_bv_sql_orders FOLDER = '/3 - integration' (
+    customerid (description = 'd')
+ )
+ AS SELECT bv_sql_customers.customerid AS customerid, bv_sql_customers.firstname AS firstname, bv_sql_customers.lastname AS lastname, bv_sql_customers.email AS email, bv_sql_orders.orderid AS orderid, bv_sql_orders.orderdate AS orderdate, bv_sql_orders.amount AS amount FROM bv_sql_customers AS bv_sql_customers INNER JOIN bv_sql_orders AS bv_sql_orders ON bv_sql_customers.customerid = bv_sql_orders.customerid ;
+
+ALTER VIEW dv_bv_sql_customers_j_bv_sql_orders
+ LAYOUT (bv_sql_customers = [20, 20, 200, 200], bv_sql_orders = [693, 83, 200, 200]);
+
